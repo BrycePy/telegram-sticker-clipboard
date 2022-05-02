@@ -5,8 +5,8 @@ import StickerPack from './components/StickerPack.vue'
 </script>
 
 <template>
-  <StickerPack packName="minitwolf"/>
-  <StickerPack packName="glitchcat"/>
+  <StickerPack packName="minitwolf" v-bind:copySize="170" />
+  <StickerPack packName="glitchcat" showEmoji />
   <StickerPack packName="glitchcat2"/>
   <StickerPack packName="kesufox"/>
 </template>
