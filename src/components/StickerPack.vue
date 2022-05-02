@@ -14,6 +14,16 @@
       type: Number,
       required: false,
       default: 512
+    },
+    numOfCol: {
+      type: Number,
+      required: false,
+      default: 5
+    },
+    previewSize: {
+      type: String,
+      required: false,
+      default: "120px"
     }
   })
 
@@ -42,8 +52,6 @@
 
 <template>
   <div class="app-container">
-    <h1 class="header-text">{{ packName }}</h1>
-
     <div class="sticker-warp">
       <div v-for="sticker in stickers" :key="sticker" class="sticker-container">
         <img class="sticker-img" :src="sticker.link" @click="copy" crossorigin="anonymous">
@@ -126,6 +134,31 @@ export default {
   margin-left: auto;
   background-color: rgba(0,0,0,0.2);
   padding: 10px;
+  height: 80vh;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+/* width */
+.app-container::-webkit-scrollbar {
+  width: 10px;
+}
+
+/* Track */
+.app-container::-webkit-scrollbar-track {
+  display: none;
+}
+
+/* Handle */
+.app-container::-webkit-scrollbar-thumb {
+  background: #888;
+  border-radius: 10px;
+  background-clip: content-box;
+}
+
+/* Handle on hover */
+.app-container::-webkit-scrollbar-thumb:hover {
+  background: #555;
 }
 
 .header-text {
@@ -141,7 +174,7 @@ export default {
   margin-right: auto;
   width: fit-content;
   display: grid;
-  grid-template-columns: repeat(5, 1fr);
+  grid-template-columns: repeat(v-bind(numOfCol), 1fr);
 }
 
 .sticker-img {
@@ -151,8 +184,8 @@ export default {
 }
 
 .sticker-container {
-  max-width: 120px;
-  max-height: 120px;
+  max-width: v-bind(previewSize);
+  max-height: v-bind(previewSize);
   aspect-ratio: 1/1;
   display: flex;
   justify-content: center;
