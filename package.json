@@ -10,6 +10,8 @@
   "dependencies": {
     "axios": "^0.27.2",
     "vue": "^3.2.25",
+    "vue-lazy-image-loading": "^1.2.1",
+    "vue3-lazyload": "^0.2.5-beta",
     "vue3-tabs-component": "^1.0.7"
   },
   "devDependencies": {

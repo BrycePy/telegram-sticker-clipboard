@@ -35,11 +35,15 @@
       data: {
         packName: props.packName
       }
-    }).then(function (response) {
+    }).then(async function (response) {
       // handle success
-      stickers.value = response.data.files.map(file => {
-        return {name: file, link: `http://localhost:5000/sticker/${file}`}
+      response.data.forEach((sticker) => {
+        sticker["image_link"] = `http://localhost:5000/sticker/${sticker.file_id}`
       })
+      for(var sticker of response.data) {
+        await new Promise(resolve => setTimeout(resolve, 5));
+        stickers.value.push(sticker)
+      }
     })
     .catch(function (error) {
       // handle error
@@ -54,8 +58,8 @@
   <div class="app-container">
     <div class="sticker-warp">
       <div v-for="sticker in stickers" :key="sticker" class="sticker-container">
-        <img class="sticker-img" :src="sticker.link" @click="copy" crossorigin="anonymous">
-        <span v-if="showEmoji" class="sticker-emote">😘</span>
+        <img class="sticker-img" :src="sticker.image_link" @click="copy" crossorigin="anonymous"/>
+        <span v-if="showEmoji" class="sticker-emote">{{sticker.emoji}}</span>
       </div>
     </div>
     <canvas id="blobTemp" style="display:none;" ref="blobTemp"></canvas>
@@ -208,6 +212,7 @@ export default {
   position: absolute;
   font-size: 25px;
   transition: all 0.1s ease-in-out;
+  text-shadow: 0px 0px 8px black;
 }
 
 .sticker-container:hover > .sticker-emote{

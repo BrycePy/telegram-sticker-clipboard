@@ -15,7 +15,7 @@ packs.value.push("kesufox")
 <template>
   <Tabs :options="{ useUrlFragment: false }">
     <Tab v-for="pack in packs" v-bind:name="pack">
-      <StickerPack v-bind:packName="pack"/>
+      <StickerPack v-bind:packName="pack" showEmoji/>
     </Tab>
   </Tabs>
 </template>

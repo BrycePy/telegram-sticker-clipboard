@@ -24,3 +24,4 @@ dist-ssr
 *.sw?
 auth_token.py
 __pycache__
+api/cache
