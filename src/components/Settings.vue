@@ -12,8 +12,6 @@
     }
   })
 
-  const newPackName = ref("")
-
 </script>
 
 <template>
@@ -29,7 +27,7 @@
       </div>
 
       <div>
-        <input type="text" v-model="newPackName"/>
+        <input type="text" id="newPackName"/>
         <button @click="addPack">Add</button>
       </div>
   </div>
@@ -43,18 +41,20 @@ export default {
   },
   methods: {
     addPack(){
-      const link = this.newPackName.match(/^https\:\/\/t\.me\/addstickers\/(\w\w+)$/)
-      const nonlink = this.newPackName.match(/^(\w\w+)$/)
+      const inputField = document.getElementById("newPackName")
+      const link = inputField.value.match(/^https\:\/\/t\.me\/addstickers\/(\w\w+)$/)
+      const nonlink = inputField.value.match(/^(\w\w+)$/)
       
       if(!link && !nonlink){
-        this.newPackName = ""
+        inputField.value = ""
         return
       }
       var packToAdd = link ? link[1] : nonlink[1]
 
       if(!this.packs.includes(packToAdd))
         this.packs.push(packToAdd)
-      this.newPackName = ""
+
+      inputField.value = ""
       this.updateURL()
     },
     removePack(index){
