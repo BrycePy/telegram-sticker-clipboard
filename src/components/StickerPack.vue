@@ -28,26 +28,37 @@
   })
 
   const stickers = ref([])
+  const status = ref({success: true, error_message: ""})
 
   axios({
       method: 'post',
-      url: `http://127.0.0.1:5000/pack`,
+      url: `https://sticker.dfg87dcbvse44.xyz/pack`,
       data: {
         packName: props.packName
       }
     }).then(async function (response) {
       // handle success
       response.data.forEach((sticker) => {
-        sticker["image_link"] = `http://localhost:5000/sticker/${sticker.file_id}`
+        sticker["image_link"] = `https://sticker.dfg87dcbvse44.xyz/sticker/${sticker.file_id}`
       })
-      for(var sticker of response.data) {
-        await new Promise(resolve => setTimeout(resolve, 5));
-        stickers.value.push(sticker)
+      if(response.data[0].is_animated){
+        status.value = {success: false, error_message: "Animated stickers are not supported yet."}
+      }else{
+        for(var sticker of response.data) {
+          await new Promise(resolve => setTimeout(resolve, 5));
+          stickers.value.push(sticker)
+        }
       }
     })
     .catch(function (error) {
       // handle error
+      status.value = {success: false, error_message: error}
       console.log(error);
+
+      if(error.response.status == 500){
+        status.value["error_message"] += "\n(unable to load sticker pack)"
+      }
+
     })
     .then(function () {
       // always executed
@@ -56,6 +67,9 @@
 
 <template>
   <div class="app-container">
+    <div v-if="!status.success" class="error_message_warp">
+      <p class="error_message_text">{{status.error_message}}</p>
+    </div>
     <div class="sticker-warp">
       <div v-for="sticker in stickers" :key="sticker" class="sticker-container">
         <img class="sticker-img" :src="sticker.image_link" @click="copy" crossorigin="anonymous"/>
@@ -217,6 +231,20 @@ export default {
 
 .sticker-container:hover > .sticker-emote{
   opacity: 0.5;
+}
+
+.error_message_warp{
+  width: 80%;
+  margin-left: auto;
+  margin-right: auto;
+  padding: 10px;
+  border-radius: 10px;
+  background-color: rgba(255, 0, 0, 0.2);
+}
+
+.error_message_text{
+  color: #fff;
+  font-size: 20px;
 }
 
 .shake-animation{

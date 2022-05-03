@@ -1,14 +1,23 @@
 <script setup>
 
 import StickerPack from './components/StickerPack.vue'
+import Settings from './components/Settings.vue'
 import { ref } from 'vue'
 import {Tabs, Tab} from 'vue3-tabs-component';
 
+console.log(location);
+const packsUrl = location.search.substring(1).split("&").filter(x => x.match(/^\w\w+$/))
+console.log(packsUrl)
+
 const packs = ref([])
-packs.value.push("minitwolf")
-packs.value.push("glitchcat")
-packs.value.push("glitchcat2")
-packs.value.push("kesufox")
+
+for(var packName of packsUrl){
+  packs.value.push(packName)
+}
+// packs.value.push("minitwolf")
+// packs.value.push("glitchcat")
+// packs.value.push("glitchcat2")
+// packs.value.push("kesufox")
 
 </script>
 
@@ -17,9 +26,11 @@ packs.value.push("kesufox")
     <Tab v-for="pack in packs" v-bind:name="pack">
       <StickerPack v-bind:packName="pack" showEmoji/>
     </Tab>
+    <Tab name="packs">
+      <Settings v-bind:packs="packs"/>
+    </Tab>
   </Tabs>
 </template>
-
 
 <style>
 body{
@@ -63,6 +74,7 @@ body{
   margin-left: auto;
   margin-right: auto;
   padding-bottom: 5px;
+  padding-inline-start: 0px;
   margin-bottom: 5px;
 }
 

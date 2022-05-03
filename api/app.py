@@ -12,7 +12,7 @@ from sticker_downloader import File as StickerFile
 downloader = StickerDownloader(auth_token.TELEGRAM)
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, origins="*")
 
 @lru_cache(maxsize=1000)
 def packProxyPing(packName):
