@@ -12,7 +12,12 @@ from sticker_downloader import File as StickerFile
 downloader = StickerDownloader(auth_token.TELEGRAM)
 
 app = Flask(__name__)
-CORS(app, origins="*")
+CORS(app, send_wildcard=True)
+
+@app.after_request
+def apply_caching(response):
+    response.headers["cache-control"] = "public, max-age=3600, immutable"
+    return response
 
 @lru_cache(maxsize=1000)
 def packProxyPing(packName):
@@ -39,7 +44,7 @@ def stickerProxy(file_id):
         with open(cache_path_header, 'r') as f:
             headers = json.load(f)
         
-        return Response(content, 200, headers)
+        return Response(content, 200, {'content-type': 'image/webp'})
 
     file_path = downloader._api_request('getFile', {'file_id': file_id})['result']['file_path']
     url = 'https://api.telegram.org/file/bot{}/{}'.format(auth_token.TELEGRAM, file_path)
@@ -55,5 +60,5 @@ def stickerProxy(file_id):
     with open(cache_path_header, 'w') as f:
         json.dump(headers, f)
 
-    response = Response(resp.content, resp.status_code, headers)
+    response = Response(resp.content, resp.status_code, {'content-type': 'image/webp'})
     return response
